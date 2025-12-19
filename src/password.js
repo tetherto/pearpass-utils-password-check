@@ -58,3 +58,72 @@ export const checkPasswordStrength = (password, config = {}) => {
     errors: errorMessages
   }
 }
+
+/**
+ * Validates a password change operation
+ * @param {Object} params
+ * @param {string} params.currentPassword - The current password
+ * @param {string} params.newPassword - The new password to validate
+ * @param {string} [params.repeatPassword] - The repeated new password to verify
+ * @param {Object} [params.messages] - Pre-translated error messages
+ * @param {string} [params.messages.newPasswordMustDiffer] - Error when new password equals current
+ * @param {string} [params.messages.passwordsDontMatch] - Error when passwords don't match
+ * @param {Object} [params.config={}] - Configuration for password strength check
+ * @param {Object} [params.config.rules={}] - Password rules configuration
+ * @param {Object} [params.config.errors={}] - Error messages for password rules
+ * @returns {{
+ *  success: boolean,
+ *  error: string | null,
+ *  field: 'newPassword' | 'repeatPassword' | null,
+ *  strengthResult: Object | null
+ * }}
+ */
+export const validatePasswordChange = (params) => {
+  const {
+    currentPassword,
+    newPassword,
+    repeatPassword,
+    messages = {},
+    config = {}
+  } = params
+
+  const strengthResult = checkPasswordStrength(newPassword, config)
+
+  if (!strengthResult.success) {
+    return {
+      success: false,
+      error:
+        strengthResult.errors.length > 0
+          ? strengthResult.errors.join(', ')
+          : null,
+      field: 'newPassword',
+      strengthResult
+    }
+  }
+
+  if (newPassword === currentPassword) {
+    return {
+      success: false,
+      error: messages.newPasswordMustDiffer,
+      field: 'newPassword',
+      strengthResult: null
+    }
+  }
+
+  // Check if passwords match (only if repeatPassword is provided)
+  if (repeatPassword !== undefined && newPassword !== repeatPassword) {
+    return {
+      success: false,
+      error: messages.passwordsDontMatch,
+      field: 'repeatPassword',
+      strengthResult: null
+    }
+  }
+
+  return {
+    success: true,
+    error: null,
+    field: null,
+    strengthResult
+  }
+}
