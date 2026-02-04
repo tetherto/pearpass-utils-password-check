@@ -11,9 +11,6 @@
     "test": "jest"
   },
   "type": "module",
-  "dependencies": {
-    "sodium-native": "^5.0.10"
-  },
   "devDependencies": {
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
