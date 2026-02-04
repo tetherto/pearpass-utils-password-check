@@ -38,23 +38,23 @@ describe('constantTimeHashCompare', () => {
       expect(sodium.sodium_memcmp).toHaveBeenCalledTimes(1)
     })
 
-    it('should return false for invalid hash length (too short)', () => {
+    it('should throw for invalid hash length (too short)', () => {
       const validHash = Buffer.alloc(32, 'a').toString('hex')
       const shortHash = Buffer.alloc(16, 'b').toString('hex')
 
-      const result = constantTimeHashCompare(validHash, shortHash)
-
-      expect(result).toBe(false)
+      expect(() => constantTimeHashCompare(validHash, shortHash)).toThrow(
+        'Invalid value2 length: expected 32 bytes, got 16'
+      )
       expect(sodium.sodium_memcmp).not.toHaveBeenCalled()
     })
 
-    it('should return false for invalid hash length (too long)', () => {
+    it('should throw for invalid hash length (too long)', () => {
       const validHash = Buffer.alloc(32, 'a').toString('hex')
       const longHash = Buffer.alloc(64, 'b').toString('hex')
 
-      const result = constantTimeHashCompare(validHash, longHash)
-
-      expect(result).toBe(false)
+      expect(() => constantTimeHashCompare(validHash, longHash)).toThrow(
+        'Invalid value2 length: expected 32 bytes, got 64'
+      )
       expect(sodium.sodium_memcmp).not.toHaveBeenCalled()
     })
   })
@@ -85,36 +85,38 @@ describe('constantTimeHashCompare', () => {
       expect(sodium.sodium_memcmp).toHaveBeenCalledTimes(1)
     })
 
-    it('should return false for invalid base64 length', () => {
+    it('should throw for invalid base64 length', () => {
       const validValue = Buffer.alloc(32, 'a').toString('base64')
       const shortValue = Buffer.alloc(16, 'b').toString('base64')
 
-      const result = constantTimeHashCompare(validValue, shortValue, 'base64')
-
-      expect(result).toBe(false)
+      expect(() =>
+        constantTimeHashCompare(validValue, shortValue, 'base64')
+      ).toThrow('Invalid value2 length: expected 32 bytes, got 16')
       expect(sodium.sodium_memcmp).not.toHaveBeenCalled()
     })
   })
 
   describe('input validation', () => {
-    it('should return false for non-string inputs', () => {
+    it('should throw TypeError for non-string inputs', () => {
       const validHash = Buffer.alloc(32, 'a').toString('hex')
 
-      expect(constantTimeHashCompare(null, validHash)).toBe(false)
-      expect(constantTimeHashCompare(validHash, null)).toBe(false)
-      expect(constantTimeHashCompare(undefined, validHash)).toBe(false)
-      expect(constantTimeHashCompare(123, validHash)).toBe(false)
-      expect(constantTimeHashCompare({}, validHash)).toBe(false)
+      expect(() => constantTimeHashCompare(null, validHash)).toThrow(TypeError)
+      expect(() => constantTimeHashCompare(validHash, null)).toThrow(TypeError)
+      expect(() => constantTimeHashCompare(undefined, validHash)).toThrow(
+        TypeError
+      )
+      expect(() => constantTimeHashCompare(123, validHash)).toThrow(TypeError)
+      expect(() => constantTimeHashCompare({}, validHash)).toThrow(TypeError)
       expect(sodium.sodium_memcmp).not.toHaveBeenCalled()
     })
 
-    it('should return false when both values have invalid length', () => {
+    it('should throw when both values have invalid length', () => {
       const shortHash1 = Buffer.alloc(16, 'a').toString('hex')
       const shortHash2 = Buffer.alloc(16, 'b').toString('hex')
 
-      const result = constantTimeHashCompare(shortHash1, shortHash2)
-
-      expect(result).toBe(false)
+      expect(() => constantTimeHashCompare(shortHash1, shortHash2)).toThrow(
+        'Invalid value1 length: expected 32 bytes, got 16'
+      )
       expect(sodium.sodium_memcmp).not.toHaveBeenCalled()
     })
   })
