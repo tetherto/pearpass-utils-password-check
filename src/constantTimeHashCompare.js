@@ -1,8 +1,24 @@
-import sodium from 'sodium-native'
+const HASH_LENGTH_BYTES = 32
+
+/**
+ * Performs constant-time comparison of two buffers.
+ * Always iterates through all bytes to prevent timing attacks.
+ *
+ * @param {Buffer} a - First buffer
+ * @param {Buffer} b - Second buffer
+ * @returns {boolean} - true if buffers are equal, false otherwise
+ */
+const constantTimeEqual = (a, b) => {
+  let result = 0
+  for (let i = 0; i < a.length; i++) {
+    result |= a[i] ^ b[i]
+  }
+  return result === 0
+}
 
 /**
  * Performs constant-time comparison of two encoded 32-byte values.
- * Uses sodium.sodium_memcmp() to prevent timing side-channel attacks.
+ * Uses XOR + OR accumulation to prevent timing side-channel attacks.
  *
  * @param {string} value1 - First encoded value (32 bytes when decoded)
  * @param {string} value2 - Second encoded value (32 bytes when decoded)
@@ -19,17 +35,17 @@ export const constantTimeHashCompare = (value1, value2, encoding = 'hex') => {
   const buffer1 = Buffer.from(value1, encoding)
   const buffer2 = Buffer.from(value2, encoding)
 
-  if (buffer1.length !== sodium.crypto_secretbox_KEYBYTES) {
+  if (buffer1.length !== HASH_LENGTH_BYTES) {
     throw new Error(
-      `Invalid value1 length: expected ${sodium.crypto_secretbox_KEYBYTES} bytes, got ${buffer1.length}`
+      `Invalid value1 length: expected ${HASH_LENGTH_BYTES} bytes, got ${buffer1.length}`
     )
   }
 
-  if (buffer2.length !== sodium.crypto_secretbox_KEYBYTES) {
+  if (buffer2.length !== HASH_LENGTH_BYTES) {
     throw new Error(
-      `Invalid value2 length: expected ${sodium.crypto_secretbox_KEYBYTES} bytes, got ${buffer2.length}`
+      `Invalid value2 length: expected ${HASH_LENGTH_BYTES} bytes, got ${buffer2.length}`
     )
   }
 
-  return sodium.sodium_memcmp(buffer1, buffer2)
+  return constantTimeEqual(buffer1, buffer2)
 }
