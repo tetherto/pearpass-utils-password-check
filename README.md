@@ -5,6 +5,7 @@ A utility library to check the strength of passwords and passphrases based on co
 ## Table of Contents
 
 - [Features](#features)
+- [Security Notice](#security-notice)
 - [Installation](#installation)
 - [Usage Examples](#usage-examples)
 - [Dependencies](#dependencies)
@@ -27,17 +28,22 @@ This utility provides functions to check the strength of passwords and passphras
 - Symbol inclusion
 - Number inclusion
 
+## Security Notice
+
+1. To ensure the security and integrity of your projects, please note that official PearPass packages are distributed exclusively through our GitHub organization.
+2. Any packages with similar names found on the npm registry or other third-party package managers are not affiliated with PearPass and should be strictly avoided. We recommend installing directly from this repository to ensure you are using the verified, open-source version.
+
 ## Installation
 
 ```bash
-npm install pearpass-utils-password-check
+npm install git+https://github.com/tetherto/pearpass-utils-password-check.git
 ```
 
 ## Usage Examples
 
 ### Checking Password Strength
 ```javascript
-import { checkPasswordStrength } from 'pearpass-utils-password-check';
+import { checkPasswordStrength } from '@tetherto/pearpass-utils-password-check';
 
 // With default rules
 const result = checkPasswordStrength('Test123!');
@@ -57,7 +63,7 @@ console.log(customResult.rules); // Detailed rules assessment
 
 ### Checking Passphrase Strength
 ```javascript
-import { checkPassphraseStrength } from 'pearpass-utils-password-check';
+import { checkPassphraseStrength } from '@tetherto/pearpass-utils-password-check';
 
 // With default rules
 const words = ['Test1!', 'Word2@', 'Example3#', 'Unique', 'Safe', 'Pass', 'Phrase', 'Another4$'];
@@ -79,19 +85,13 @@ console.log(customResult.rules); // Detailed rules assessment
 
 This package has no runtime dependencies.
 
-## Depended Submodules
-
-The following sibling submodules must be present in the workspace (they are not declared as npm dependencies):
-
-- [`tether-dev-docs`](../tether-dev-docs)
-
 ## Related Projects
 
-- [pearpass-app-mobile](https://github.com/tetherto/pearpass-app-mobile) - A mobile app for PearPass, a password manager
-- [pearpass-app-desktop](https://github.com/tetherto/pearpass-app-desktop) - A desktop app for PearPass, a password
-- [pearpass-lib-ui-react-native-components](https://github.com/tetherto/pearpass-lib-ui-react-native-components) - A library of React Native UI components for PearPass
-- [pearpass-lib-ui-react-components](https://github.com/tetherto/pearpass-lib-ui-react-components) - A library of React UI components for PearPass
-- [tether-dev-docs](https://github.com/tetherto/tether-dev-docs) - Documentations and guides for developers
+- [@tetherto/pearpass-app-mobile](https://github.com/tetherto/pearpass-app-mobile) - A mobile app for PearPass, a password manager
+- [@tetherto/pearpass-app-desktop](https://github.com/tetherto/pearpass-app-desktop) - A desktop app for PearPass, a password
+- [@tetherto/pearpass-lib-ui-react-native-components](https://github.com/tetherto/pearpass-lib-ui-react-native-components) - A library of React Native UI components for PearPass
+- [@tetherto/pearpass-lib-ui-react-components](https://github.com/tetherto/pearpass-lib-ui-react-components) - A library of React UI components for PearPass
+- [@tetherto/tether-dev-docs](https://github.com/tetherto/tether-dev-docs) - Documentations and guides for developers
 
 ## License
 
