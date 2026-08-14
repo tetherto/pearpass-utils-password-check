@@ -1,3 +1,6 @@
+> [!WARNING]
+> 🍐 PearPass is currently paused from active development, so please use at your own caution until further notice.
+
 # pearpass-utils-password-check
 
 A utility library to check the strength of passwords and passphrases based on configurable rules.
